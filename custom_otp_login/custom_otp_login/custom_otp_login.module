@@ -1,0 +1,54 @@
+<?php
+
+	/**
+	 * @file
+	 * Custom OTP Login module.
+	 */
+	use Drupal\Core\Ajax\AjaxResponse;
+	use Drupal\Core\Ajax\ChangedCommand;
+	use Drupal\Core\Ajax\CssCommand;
+	use Drupal\Core\Ajax\HtmlCommand;
+	use Drupal\Core\Ajax\InvokeCommand;
+	use Drupal\Core\Form\FormBase;
+	use Drupal\Core\Form\FormStateInterface;
+	
+	function custom_otp_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+		if ($form_id == 'user_login_form') {
+			$form['get_otp'] = array(
+				'#type' => 'button',
+				'#value' => t('Request OTP'),
+				'#attributes' => array(
+					'class' => array('get_otp')
+				),
+				'#ajax' => array(
+					'callback' => '\Drupal\custom_otp_login\Controller\custom_otp_loginController::usernameValidateCallback',
+					'event' => 'click',
+					'progress' => array(
+						'type' => 'throbber',
+						'message' => 'Verifying User',
+					),
+				)
+			);			
+			unset($form['#validate']);
+			unset($form['pass']);
+			$form['otp'] = array('#type' => 'password','#title' => t('OTP'),'#description' => t('One Time Password'));		
+			
+			foreach (array_keys($form['actions']) as $action) {
+				if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
+					$form['actions'][$action]['#submit'][] = 'custom_otp_login_form_submit';
+				}
+			}
+			$form['#attached']['library'][] = 'custom_otp_login/custom_otp_login_lib';
+		}
+	}
+	
+	function custom_otp_login_form_validate(&$form, FormStateInterface &$form_state) {
+		$otp = $form_state->getValue('otp');
+		if (isset($otp) && 2 < strlen($otp)) {
+			$form_state->setErrorByName('otp', t('That is not a valid OTP.'));
+		}
+	}
+	
+	function custom_otp_login_form_submit(&$form, FormStateInterface $form_state) {
+		drupal_set_message('It works!');
+	}

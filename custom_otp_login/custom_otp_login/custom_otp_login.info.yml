@@ -1,0 +1,7 @@
+name: Custom OTP Login
+type: module
+description: Custom OTP Login module
+core: 8.x
+version: 1.1
+libraries:
+  - custom_otp_login/custom_otp_login_lib

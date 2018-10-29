@@ -1,0 +1,11 @@
+custom_otp_login_lib:
+  version: 1.x
+  css:
+    theme:
+      css/custom_otp_login.css: {}
+  js:
+    js/custom_otp_login.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+  header: true

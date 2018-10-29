@@ -1,0 +1,9 @@
+hello:
+  path: '/custom_otp_login'
+  defaults:
+    _title: 'Custom OTP Login Title'
+    _controller: '\Drupal\custom_otp_login\Controller\custom_otp_loginController::content'
+    _controller: '\Drupal\custom_otp_login\Controller\custom_otp_loginController::usernameValidateCallback'
+    _controller: '\Drupal\custom_otp_login\Controller\custom_otp_loginController::userValidateCallback'
+  requirements:
+    _permission: 'access_content'
